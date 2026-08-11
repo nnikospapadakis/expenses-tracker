@@ -318,3 +318,101 @@ input:focus, select:focus { outline: 2px solid var(--accent); }
 .login-card h1 { margin: 0 0 0.2rem; font-size: 1.4rem; }
 .google-btn { display: flex; justify-content: center; margin-top: 1.2rem; min-height: 44px; }
 .login-card .signing-in { text-align: center; margin-top: 0.8rem; }
+
+/* ---- Quick transaction ---- */
+.quick .seg { margin-bottom: 0.8rem; }
+.seg-btn.active.pos { background: var(--pos); border-color: var(--pos); color: #052e16; }
+.seg-btn.active.neg { background: var(--neg); border-color: var(--neg); color: #3f0d0d; }
+
+.amount-display {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  padding: 0.5rem 0 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.amount-display.pos { color: var(--pos); }
+.amount-display.neg { color: var(--neg); }
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+.numpad-key {
+  padding: 0.85rem;
+  min-height: 44px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+}
+.numpad-key:active { background: var(--border); }
+
+.cat-picker { margin-bottom: 0.8rem; }
+.cat-scroll {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.4rem 0.2rem 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+.cat-chip-wrap { position: relative; flex: 0 0 auto; }
+.cat-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.cat-chip.active { background: var(--accent); border-color: var(--accent); color: #04283a; }
+.cat-chip.add { font-size: 1.1rem; font-weight: 700; padding: 0.5rem 0.8rem; }
+.cat-emoji { font-size: 1.1rem; }
+.cat-del {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--neg);
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cat-add { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.2rem; }
+.cat-add input { margin-top: 0; }
+.cat-add .cat-emoji-input { width: 3rem; text-align: center; }
+.cat-add .btn { width: auto; padding: 0.6rem 0.9rem; }
+
+.quick-note { margin-bottom: 0.8rem; }
+
+/* ---- Checkbox row (recurring toggle) ---- */
+.form label.check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text);
+  cursor: pointer;
+}
+.form label.check input {
+  width: auto;
+  margin: 0;
+}
+.section-label { margin: 0.4rem 0 0.4rem; text-transform: uppercase; letter-spacing: 0.04em; }

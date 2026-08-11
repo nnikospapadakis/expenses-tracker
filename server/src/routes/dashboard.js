@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { db } from "../store.js";
 import { toMonthly } from "../lib.js";
+import { materializeIncome } from "../recurring.js";
 
 export const dashboardRouter = Router();
 
 // Aggregated numbers for the dashboard "at a glance" view (current user only).
 dashboardRouter.get("/", (req, res) => {
   const uid = req.user.uid;
+  materializeIncome(uid);
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1; // 1-12

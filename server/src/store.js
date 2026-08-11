@@ -21,6 +21,8 @@ const EMPTY = {
   income: [],
   subscriptions: [],
   expenses: [],
+  categories: [],
+  recurringIncome: [],
   netWorthSnapshots: [],
 };
 
@@ -41,7 +43,7 @@ function migrateOwnership(data) {
   const firstUserId = data.users[0]?.id;
   if (!firstUserId) return false;
   let changed = false;
-  for (const coll of ["income", "subscriptions", "expenses", "netWorthSnapshots"]) {
+  for (const coll of ["income", "subscriptions", "expenses", "categories", "recurringIncome", "netWorthSnapshots"]) {
     for (const rec of data[coll]) {
       if (rec.userId == null) {
         rec.userId = firstUserId;

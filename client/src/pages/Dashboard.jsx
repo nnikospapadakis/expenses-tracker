@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, fmt } from "../api.js";
+import QuickTransaction from "../components/QuickTransaction.jsx";
 
 const monthName = (m) =>
   new Date(2000, m - 1, 1).toLocaleString("en", { month: "long" });
@@ -8,8 +9,10 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+  const load = () =>
     api.get("/api/dashboard").then(setData).catch((e) => setError(e.message));
+  useEffect(() => {
+    load();
   }, []);
 
   if (error) return <div className="error">{error}</div>;
@@ -22,6 +25,8 @@ export default function Dashboard() {
       <h2 className="page-title">
         {monthName(data.period.month)} {data.period.year}
       </h2>
+
+      <QuickTransaction onAdded={load} />
 
       <div className="grid">
         <Stat label="Income this month" value={fmt(data.currentMonthIncome)} />

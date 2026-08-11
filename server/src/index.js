@@ -9,12 +9,20 @@ import { authRouter, requireAuth } from "./auth.js";
 import { incomeRouter } from "./routes/income.js";
 import { subscriptionsRouter } from "./routes/subscriptions.js";
 import { expensesRouter } from "./routes/expenses.js";
+import { categoriesRouter } from "./routes/categories.js";
+import { recurringIncomeRouter } from "./routes/recurringIncome.js";
 import { dashboardRouter } from "./routes/dashboard.js";
 import { projectionRouter } from "./routes/projection.js";
 import { reportsRouter } from "./routes/reports.js";
+import { rateLimit } from "./rateLimit.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
+
+// Behind the cPanel/LiteSpeed proxy so req.ip reflects the real client (via
+// X-Forwarded-For) — needed for per-client rate limiting rather than lumping
+// everyone under the proxy's single address.
+app.set("trust proxy", true);
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,11 +33,29 @@ app.use(cookieParser());
 // depending on how the host (LiteSpeed/Passenger) routes it, the app may see
 // the path with or without the "/tracker" prefix — mounting both covers both.
 const apiRouter = express.Router();
+
+// Light abuse protection for the public deployment: a generous global cap, a
+// stricter cap on writes, and a tight cap on the sensitive auth endpoints.
+apiRouter.use(rateLimit({ name: "api", windowMs: 60_000, max: 240 }));
+apiRouter.use(rateLimit({ name: "write", windowMs: 60_000, max: 40, skipGet: true }));
+
 apiRouter.get("/health", (req, res) => res.json({ ok: true }));
+
+apiRouter.use(
+  ["/auth/login", "/auth/google"],
+  rateLimit({
+    name: "auth",
+    windowMs: 15 * 60_000,
+    max: 40,
+    message: "Too many sign-in attempts — please wait a few minutes and try again.",
+  })
+);
 apiRouter.use("/auth", authRouter);
 apiRouter.use("/income", requireAuth, incomeRouter);
+apiRouter.use("/recurring-income", requireAuth, recurringIncomeRouter);
 apiRouter.use("/subscriptions", requireAuth, subscriptionsRouter);
 apiRouter.use("/expenses", requireAuth, expensesRouter);
+apiRouter.use("/categories", requireAuth, categoriesRouter);
 apiRouter.use("/dashboard", requireAuth, dashboardRouter);
 apiRouter.use("/projection", requireAuth, projectionRouter);
 apiRouter.use("/reports", requireAuth, reportsRouter);
